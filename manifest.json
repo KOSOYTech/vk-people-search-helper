@@ -1,0 +1,28 @@
+{
+	"manifest_version": 2,
+	"name": "VK Dating Swipe",
+	"version": "1.0",
+	"description": "Скрипт, который позволяет убирать в поиске по людям ВКонтакте профили людей, которые вам не понравились",
+	"icons": { "16": "vkdate16.png",
+			   "48": "vkdate48.png",
+			  "128": "vkdate128.png" },
+	
+    "browser_action": {
+        "default_title": "VK Dating Swipe - помощник для поиска знакомств ВКонтакте",
+        "default_popup": "popup.html"
+    },
+	"author": "Косой Максим",
+	"background": {
+		"scripts":["background.js"]
+	  },
+	"content_scripts": [{
+		"matches": [ "https://vk.com/*" ],
+		"js": ["jquery.js", "content.js"],
+		"css": ["content.css"]
+	}
+  ],
+  "permissions": [ "storage",
+    "https://vk.com/search*", "webNavigation", "tabs"
+  ], 
+  "short_name": "VK Date"
+}
