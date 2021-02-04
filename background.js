@@ -1,17 +1,56 @@
 // ДЛЯ ОТЛАДКИ:
 console.log("Фоновые скрипты запущены");
 
+var doubleUpdateFlag = 0;
+
+
+
+  
+
+   // Проверка отслеживания на конкретных страницах
+   chrome.webNavigation.onCommitted.addListener(closeTab, {
+    url: [
+      {urlPrefix: 'https://vk.com'}
+    ]
+  });
+  
+  function closeTab(e) {
+
+     
+    if (e.frameId != 0) {
+
+      alert("Сработало отслеживание на конкретной странице");
+
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+        chrome.tabs.sendMessage(tabs[0].id, {messageurl: "changedurl"});  
+      });
+
+    }
+
+
+   
+    
+  }
+
+
+
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 
 
     console.log("Сообщение получено")
+
+ 
+
 // Отслеживание смены URL без перезагрузки страницы
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 
-  console.log('URL изменился, но страница не перезагрузилась');
-  console.log(details);
+  // ДЛЯ ОТЛАДКИ:
+  // alert('В background.js отслежена смена URL');
+
+  // console.log('URL изменился, но страница не перезагрузилась');
+  // console.log(details);
 
 //chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {          
  // if (changeInfo.status == 'complete') {   

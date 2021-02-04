@@ -1,6 +1,8 @@
 // ДЛЯ ОТЛАДКИ. Очистка настроек
 // chrome.storage.local.clear()
 
+
+
 // Оборачиваем содержимое content.js в функцию, чтобы запускать его только тогда, когда мы находимся на странице поиска
 function contentScript() {
 
@@ -18,8 +20,19 @@ chrome.storage.local.get({'accountArrayParam' : {}}, function(result){
 
 	accountArray.forEach(function (item, index) {
 		//console.log(item, index);
-		var hiddenAccount = document.querySelector("div[data-id='" + item + "']");
-		hiddenAccount.style.display = 'none';
+		//console.log(typeof item);
+		var selector = "div[data-id='1']";
+		//console.log(selector);
+		var selectorInter = "div[data-id='" + item + "']";
+		//console.log(selectorInter);
+		//var hiddenAccount = document.querySelector("div[data-id='" + item + "']");
+		var hiddenAccount = document.querySelector(selectorInter);
+		// `[data-name=${CSS.escape(name)}]`
+		console.log(hiddenAccount);
+		if (hiddenAccount != null) {
+			hiddenAccount.style.display = 'none';
+		}
+		
 	  });
 
 
@@ -72,8 +85,8 @@ function showAccount(id) {
 		
 		// ДЛЯ ОТЛАДКИ:
 		// Показать сохраненную переменную до добавления туда нового ID
-		// console.log("Настройка до добавления туда нового ID:");
-		// console.log(result.accountArrayParam);
+		console.log("Настройка до добавления туда нового ID:");
+		console.log(result.accountArrayParam);
 		// console.log("Тип настройки:");
 		// console.log(typeof result.accountArrayParam);
 		// console.log("Настройка - это массив:");
@@ -167,12 +180,23 @@ observer.observe(elem, {
 
 }
 
-chrome.runtime.sendMessage({greeting: "hello"});
+// chrome.runtime.sendMessage({greeting: "hello"});
  //Получение информации от фонового скрипта о том, что URL изменился
- chrome.runtime.onMessage.addListener(
+//  chrome.runtime.onMessage.addListener(
+// 	function(request, sender, sendResponse) {
+		
+// 	  if (request.message == "changed" && window.location.pathname == '/search'){
+//  		contentScript();
+// 	}
+// });
+
+
+// Проверка когда приходит от бэкграунда инфа о urk
+chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		
-	  if (request.message == "changed" && window.location.pathname == '/search'){
- 		contentScript();
+	  if (request.messageurl == "changedurl" && window.location.pathname == '/search'){
+		 //alert("Пришло");
+		 contentScript();
 	}
 });
