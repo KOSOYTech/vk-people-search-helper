@@ -1,2 +1,2 @@
-# gwars-real-price
+# vk-people-search-helper
 
