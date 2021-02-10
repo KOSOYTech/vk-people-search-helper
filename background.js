@@ -1,36 +1,41 @@
 // ДЛЯ ОТЛАДКИ:
-console.log("Фоновые скрипты запущены");
+// Обозначаем, что Background.js работает
+// console.log("Фоновые скрипты запущены");
+// console.log('------------------------');
 
-var doubleUpdateFlag = 0;
+// Отслеживаем события полной загрузки страницы или обновления на vk.com
+chrome.webNavigation.onCompleted.addListener(urlChangeAlert, {
+  url: [
+    {urlPrefix: 'https://vk.com'}
+  ]
+});
 
-
-
+// Отслеживаем события изменения URL на vk.com
+chrome.webNavigation.onHistoryStateUpdated.addListener(urlChangeAlert, {
+  url: [
+    {urlPrefix: 'https://vk.com'}
+  ]
+});
   
+// Функция, которая вызывается при изменения URL страницах vk.com
+function urlChangeAlert(e) {
 
-   // Проверка отслеживания на конкретных страницах
-   chrome.webNavigation.onCommitted.addListener(closeTab, {
-    url: [
-      {urlPrefix: 'https://vk.com'}
-    ]
-  });
-  
-  function closeTab(e) {
+  // ДЛЯ ОТЛАДКИ:
+  // Обозначаем, что событие изменения URL на сайте сработало
+  // console.log("Сработало событие. Изменился URL");
+  // console.log('Полученные данные:')
+  // console.log(e);
+  // console.log('------------------------');
 
-     
-    if (e.frameId != 0) {
-
-      alert("Сработало отслеживание на конкретной странице");
-
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-        chrome.tabs.sendMessage(tabs[0].id, {messageurl: "changedurl"});  
-      });
-
-    }
-
-
-   
+  // ДЛЯ ОТЛАДКИ:
+  // console.log("Перезагрузка или сработал Ajax");
+  // console.log('------------------------');
     
-  }
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+    chrome.tabs.sendMessage(e.tabId, {messageurl: "changedurl"});  
+  });
+
+}
 
 
 
